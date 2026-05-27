@@ -1,0 +1,17 @@
+{
+  "name": "@claria/api",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Claria FastAPI backend (Turbo wrapper for Python scripts)",
+  "scripts": {
+    "dev": "uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+    "start": "uv run uvicorn app.main:app --host 0.0.0.0 --port 8000",
+    "lint": "uv run ruff check .",
+    "lint:fix": "uv run ruff check --fix .",
+    "format": "uv run ruff format .",
+    "typecheck": "uv run mypy app",
+    "test": "uv run pytest",
+    "build": "echo 'no build step required for python'",
+    "clean": "rm -rf .venv .pytest_cache .ruff_cache .mypy_cache **/__pycache__"
+  }
+}
