@@ -1,0 +1,33 @@
+# Local development Postgres.
+#
+# Use this when you want to develop offline. For day-to-day work, Neon
+# branches are usually preferable — they match production behaviour exactly.
+#
+# Start:  docker compose -f docker-compose.dev.yml up -d
+# Stop:   docker compose -f docker-compose.dev.yml down
+# Reset:  docker compose -f docker-compose.dev.yml down -v
+#
+# Connection string for apps/api/.env:
+#   DATABASE_URL=postgresql+asyncpg://claria:claria_dev@localhost:5432/claria_dev
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: claria-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: claria
+      POSTGRES_PASSWORD: claria_dev
+      POSTGRES_DB: claria_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U claria -d claria_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
