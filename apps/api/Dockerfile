@@ -12,15 +12,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
 
-COPY pyproject.toml uv.lock* ./
+COPY pyproject.toml uv.lock ./
 
+# Install production deps only. --no-install-project skips installing our
+# own code as a package (we don't declare a [build-system]; the app runs
+# from the source tree with WORKDIR on PYTHONPATH).
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project --no-dev
 
 COPY app ./app
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev
 
 # ---------- runtime ----------
 FROM python:3.12-slim AS runtime

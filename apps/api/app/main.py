@@ -31,9 +31,7 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
     request across services (frontend → api → background task).
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         request_id = request.headers.get("x-request-id") or str(uuid.uuid4())
         request.state.request_id = request_id
         structlog.contextvars.bind_contextvars(

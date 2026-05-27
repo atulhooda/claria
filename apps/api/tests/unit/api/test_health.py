@@ -19,8 +19,6 @@ def test_health_response_includes_request_id(client: TestClient) -> None:
 
 
 def test_health_honours_incoming_request_id(client: TestClient) -> None:
-    response = client.get(
-        "/api/v1/health", headers={"x-request-id": "test-id-12345"}
-    )
+    response = client.get("/api/v1/health", headers={"x-request-id": "test-id-12345"})
 
     assert response.headers["x-request-id"] == "test-id-12345"
