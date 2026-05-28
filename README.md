@@ -8,15 +8,15 @@ Early development. Vertical-slice MVP in progress: sign-in → record → transc
 
 ## Tech stack
 
-| Layer | Choice |
-| --- | --- |
-| Frontend | Next.js 15 (App Router) + TypeScript + Tailwind + shadcn/ui |
-| Backend | FastAPI + SQLAlchemy 2.0 (async) + Alembic |
-| Database | PostgreSQL (Neon) |
-| Auth | Clerk |
-| Object storage | Cloudflare R2 |
-| AI | OpenAI Whisper API + GPT-4o |
-| Deployment | Vercel (web) · Railway (api) · Neon (db) |
+| Layer          | Choice                                                      |
+| -------------- | ----------------------------------------------------------- |
+| Frontend       | Next.js 15 (App Router) + TypeScript + Tailwind + shadcn/ui |
+| Backend        | FastAPI + SQLAlchemy 2.0 (async) + Alembic                  |
+| Database       | PostgreSQL (Neon)                                           |
+| Auth           | Clerk                                                       |
+| Object storage | Cloudflare R2                                               |
+| AI             | OpenAI Whisper API + GPT-4o                                 |
+| Deployment     | Vercel (web) · Railway (api) · Neon (db)                    |
 
 ## Layout
 
@@ -51,27 +51,27 @@ pnpm install
 pnpm dev
 
 # Or one at a time
-pnpm --filter web dev
-pnpm --filter api dev
+pnpm --filter @claria/web dev
+pnpm --filter @claria/api dev
 ```
 
 Each app owns its own environment configuration:
 
-- `apps/api/.env`        — copy from `apps/api/.env.example`
-- `apps/web/.env.local`  — copy from `apps/web/.env.example`
+- `apps/api/.env` — copy from `apps/api/.env.example`
+- `apps/web/.env.local` — copy from `apps/web/.env.example`
 
 See each app's `README.md` for setup details and required environment variables.
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Start all apps in development |
-| `pnpm build` | Build all apps |
-| `pnpm lint` | Lint all workspaces |
-| `pnpm typecheck` | Type-check all workspaces |
-| `pnpm test` | Run all tests |
-| `pnpm format` | Format the repo with Prettier |
+| Command             | Description                       |
+| ------------------- | --------------------------------- |
+| `pnpm dev`          | Start all apps in development     |
+| `pnpm build`        | Build all apps                    |
+| `pnpm lint`         | Lint all workspaces               |
+| `pnpm typecheck`    | Type-check all workspaces         |
+| `pnpm test`         | Run all tests                     |
+| `pnpm format`       | Format the repo with Prettier     |
 | `pnpm format:check` | Verify formatting without writing |
 
 ## Workflow

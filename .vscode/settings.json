@@ -17,6 +17,9 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -25,8 +28,36 @@
   },
   "python.analysis.typeCheckingMode": "basic",
   "python.defaultInterpreterPath": "${workspaceFolder}/apps/api/.venv/bin/python",
+
   "typescript.tsdk": "apps/web/node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+
+  "eslint.workingDirectories": [
+    { "pattern": "apps/*" },
+    { "pattern": "packages/*" }
+  ],
+  "eslint.useFlatConfig": false,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  "tailwindCSS.experimental.configFile": {
+    "apps/web/tailwind.config.ts": "apps/web/src/**"
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.classFunctions": ["cn", "cva", "clsx", "twMerge"],
+  "tailwindCSS.classAttributes": ["class", "className", ".*ClassName"],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
   "files.exclude": {
     "**/.turbo": true,
     "**/__pycache__": true,
@@ -42,6 +73,7 @@
     "**/node_modules": true,
     "**/__pycache__": true,
     "**/dist": true,
-    "**/coverage": true
+    "**/coverage": true,
+    "**/pnpm-lock.yaml": true
   }
 }

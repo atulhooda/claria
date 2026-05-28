@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Single-hue beige palette. Background is a warm cream; foreground and
+ * primary are a deep espresso. Surfaces, borders, and muted variants
+ * all live in the same warm hue family (~32° H, low saturation) so the
+ * UI reads as one tonal scheme. Dark mode is the inverted warm range.
+ */
+
+@layer base {
+  :root {
+    --background: 36 32% 94%;
+    --foreground: 28 24% 14%;
+
+    --surface-1: 36 34% 96%;
+    --surface-2: 36 28% 91%;
+    --surface-3: 34 22% 86%;
+
+    --card: 36 34% 96%;
+    --card-foreground: 28 24% 14%;
+
+    --popover: 36 34% 96%;
+    --popover-foreground: 28 24% 14%;
+
+    --primary: 28 26% 16%;
+    --primary-foreground: 36 36% 96%;
+
+    --secondary: 36 28% 91%;
+    --secondary-foreground: 28 24% 14%;
+
+    --muted: 36 26% 90%;
+    --muted-foreground: 28 12% 38%;
+
+    --accent: 36 28% 91%;
+    --accent-foreground: 28 24% 14%;
+
+    --destructive: 8 62% 44%;
+    --destructive-foreground: 36 36% 96%;
+
+    --border: 34 18% 82%;
+    --border-strong: 34 16% 74%;
+    --input: 34 18% 82%;
+    --ring: 28 26% 16%;
+
+    --radius: 0.5rem;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --duration-fast: 180ms;
+    --duration-base: 280ms;
+    --duration-slow: 420ms;
+    --duration-slower: 640ms;
+  }
+
+  .dark {
+    --background: 28 18% 8%;
+    --foreground: 36 28% 92%;
+
+    --surface-1: 28 18% 10%;
+    --surface-2: 28 16% 13%;
+    --surface-3: 28 14% 17%;
+
+    --card: 28 18% 10%;
+    --card-foreground: 36 28% 92%;
+
+    --popover: 28 16% 13%;
+    --popover-foreground: 36 28% 92%;
+
+    --primary: 36 30% 90%;
+    --primary-foreground: 28 24% 12%;
+
+    --secondary: 28 14% 17%;
+    --secondary-foreground: 36 28% 92%;
+
+    --muted: 28 14% 17%;
+    --muted-foreground: 32 14% 62%;
+
+    --accent: 28 14% 17%;
+    --accent-foreground: 36 28% 92%;
+
+    --destructive: 8 58% 50%;
+    --destructive-foreground: 36 28% 92%;
+
+    --border: 28 12% 20%;
+    --border-strong: 28 10% 28%;
+    --input: 28 12% 20%;
+    --ring: 36 30% 80%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    @apply antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1,
+      "ss01" 1,
+      "cv11" 1;
+  }
+  ::selection {
+    @apply bg-primary/15 text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Faint grain — keeps large flat beige surfaces from looking flat. */
+  .bg-noise {
+    background-image: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.035 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .ring-inset-highlight {
+    box-shadow: inset 0 1px 0 0 hsl(0 0% 100% / 0.6);
+  }
+
+  /*
+   * Subtle top-down gradient for panes — slightly brighter at the top
+   * edge so panels read as catching light from above. Pairs with
+   * `shadow-pane` for the Linear/Notion floating-card feel.
+   */
+  .bg-pane-gradient {
+    background-image: linear-gradient(
+      to bottom,
+      hsl(var(--surface-1)) 0%,
+      hsl(var(--surface-1) / 0.96) 100%
+    );
+  }
+
+  /*
+   * Soft radial wash used as the workspace's ambient backdrop. Two
+   * overlapping orbs (warm + slightly cooler) drift slowly so the
+   * background never feels static, but never reads as decorative.
+   */
+  .bg-workspace-wash {
+    background-image:
+      radial-gradient(ellipse 70% 50% at 20% 0%, hsl(28 26% 16% / 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 45% at 95% 10%, hsl(28 30% 30% / 0.05) 0%, transparent 55%);
+  }
+
+  /*
+   * Animated AI "thinking" shimmer — a single moving stripe of slightly
+   * brighter color across a pill or bar. Apply to elements that have
+   * `position: relative` and overflow-hidden.
+   */
+  .ai-shimmer {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(0 0% 100% / 0.55) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: ai-think 2.4s ease-in-out infinite;
+    mix-blend-mode: overlay;
+  }
+
+  /*
+   * Vertical edge highlight to mark the "freshly arrived" transcript
+   * line — a faint primary-tinted left border that fades out over a
+   * couple of seconds.
+   */
+  .fresh-edge {
+    box-shadow: inset 2px 0 0 0 hsl(var(--primary));
+    animation: fresh-line 2.4s ease-out forwards;
+  }
+}
+
+@layer base {
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

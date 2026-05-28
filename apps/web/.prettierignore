@@ -1,0 +1,5 @@
+.next/
+.turbo/
+node_modules/
+next-env.d.ts
+public/
