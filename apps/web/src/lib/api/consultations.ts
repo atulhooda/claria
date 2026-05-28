@@ -110,6 +110,7 @@ export const consultationsApi = {
     api.post<ConsultationSummary>(ROOT, body as Record<string, unknown>),
   markReviewed: (id: string) =>
     api.patch<ConsultationSummary>(`${ROOT}/${id}/review`, { reviewed: true }),
+  delete: (id: string) => api.delete<void>(`${ROOT}/${id}`),
 };
 
 /* ─────────────── React Query hooks ─────────────── */
@@ -155,6 +156,17 @@ export function useMarkReviewed(id: string) {
     mutationFn: () => consultationsApi.markReviewed(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: consultationsKeys.detail(id) });
+      qc.invalidateQueries({ queryKey: consultationsKeys.list() });
+    },
+  });
+}
+
+export function useDeleteConsultation() {
+  const qc = useQueryClient();
+  return useMutation<void, Error, string>({
+    mutationFn: (id) => consultationsApi.delete(id),
+    onSuccess: (_data, id) => {
+      qc.removeQueries({ queryKey: consultationsKeys.detail(id) });
       qc.invalidateQueries({ queryKey: consultationsKeys.list() });
     },
   });

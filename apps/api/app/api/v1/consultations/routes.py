@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Response, status
 
 from app.api.deps import CurrentUser, DbSession
 from app.core.config import get_settings
@@ -126,6 +126,27 @@ async def mark_reviewed(
         await db.flush()
         await db.refresh(consultation)
     return _to_summary(consultation)
+
+
+# ─────────────────── DELETE /consultations/{id} ───────────────────
+
+
+@router.delete(
+    "/{consultation_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response,
+)
+async def delete_consultation(
+    consultation_id: uuid.UUID,
+    user: CurrentUser,
+    db: DbSession,
+) -> Response:
+    """Hard-delete a consultation and all of its child rows."""
+    repo = ConsultationRepository(db)
+    deleted = await repo.delete(consultation_id=consultation_id, user_id=user.id)
+    if not deleted:
+        raise NotFoundError("consultation not found", code="CONSULTATION_NOT_FOUND")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 # ──────────────────────────── adapters ────────────────────────────

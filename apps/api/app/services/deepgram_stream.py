@@ -232,6 +232,21 @@ class DeepgramStreamSession:
                 speaker_index = getattr(words[0], "speaker", None)
             speaker = _speaker_for_index(speaker_index)
 
+            # Diagnostic: in `nova-3 multi` (multilingual) mode, Deepgram does
+            # not split speakers — we expect `None` here for every utterance.
+            # Logging gives ground truth when debugging mislabeled speakers.
+            if (is_final or speech_final) and words:
+                distinct = sorted({
+                    s for w in words
+                    if (s := getattr(w, "speaker", None)) is not None
+                })
+                log.info(
+                    "transcript_speaker_indices",
+                    first=speaker_index,
+                    distinct=distinct,
+                    word_count=len(words),
+                )
+
             event_type: Literal["transcript.partial", "transcript.final"] = (
                 "transcript.final" if (is_final or speech_final) else "transcript.partial"
             )

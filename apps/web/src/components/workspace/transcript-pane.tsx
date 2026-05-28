@@ -11,12 +11,13 @@ interface TranscriptPaneProps {
   lines: TranscriptLine[];
   activity: AiActivity;
   className?: string;
+  /** Display labels for the two speaker channels. */
+  speakerLabels?: { doctor: string; patient: string };
+  /** Right-aligned model/language hint shown in the header. */
+  headerMeta?: string;
 }
 
-const SPEAKER_LABEL: Record<TranscriptLine["speaker"], string> = {
-  doctor: "Dr. Patel",
-  patient: "Patient",
-};
+const DEFAULT_SPEAKER_LABELS = { doctor: "Doctor", patient: "Patient" };
 
 function formatTime(sec: number): string {
   const m = Math.floor(sec / 60).toString().padStart(2, "0");
@@ -24,7 +25,13 @@ function formatTime(sec: number): string {
   return `${m}:${s}`;
 }
 
-export function TranscriptPane({ lines, activity, className }: TranscriptPaneProps) {
+export function TranscriptPane({
+  lines,
+  activity,
+  className,
+  speakerLabels = DEFAULT_SPEAKER_LABELS,
+  headerMeta,
+}: TranscriptPaneProps) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const lastLineId = lines[lines.length - 1]?.id;
 
@@ -52,9 +59,11 @@ export function TranscriptPane({ lines, activity, className }: TranscriptPanePro
             {lines.length} {lines.length === 1 ? "line" : "lines"}
           </span>
         </div>
-        <span className="font-mono text-[10px] text-muted-foreground/70">
-          en-US · medical
-        </span>
+        {headerMeta ? (
+          <span className="font-mono text-[10px] text-muted-foreground/70">
+            {headerMeta}
+          </span>
+        ) : null}
       </header>
 
       {/* Top fade — softens scroll-into-view so lines emerge from a haze. */}
@@ -96,7 +105,7 @@ export function TranscriptPane({ lines, activity, className }: TranscriptPanePro
                           : "text-muted-foreground",
                       )}
                     >
-                      {SPEAKER_LABEL[line.speaker]}
+                      {speakerLabels[line.speaker]}
                     </span>
                     <span className="font-mono text-[10px] tabular-nums text-muted-foreground/55">
                       {formatTime(line.timestampSec)}

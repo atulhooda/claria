@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import * as React from "react";
 import { UserButton } from "@clerk/nextjs";
-import { Loader2Icon, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -12,20 +12,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useCreateConsultation } from "@/lib/api/consultations";
+import { NewConsultationDialog } from "@/components/consultations/new-consultation-dialog";
 
 interface TopNavProps {
   title?: string;
 }
 
 export function TopNav({ title }: TopNavProps) {
-  const router = useRouter();
-  const createMut = useCreateConsultation();
-
-  const startLiveConsultation = async () => {
-    const created = await createMut.mutateAsync();
-    router.push(`/consultations/${created.id}`);
-  };
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl md:px-6">
@@ -44,14 +38,9 @@ export function TopNav({ title }: TopNavProps) {
               variant="accent"
               size="sm"
               className="gap-1.5"
-              onClick={startLiveConsultation}
-              disabled={createMut.isPending}
+              onClick={() => setDialogOpen(true)}
             >
-              {createMut.isPending ? (
-                <Loader2Icon className="h-4 w-4 animate-spin" />
-              ) : (
-                <PlusIcon className="h-4 w-4" />
-              )}
+              <PlusIcon className="h-4 w-4" />
               New consultation
             </Button>
           </TooltipTrigger>
@@ -70,6 +59,8 @@ export function TopNav({ title }: TopNavProps) {
           afterSignOutUrl="/"
         />
       </div>
+
+      <NewConsultationDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </header>
   );
 }

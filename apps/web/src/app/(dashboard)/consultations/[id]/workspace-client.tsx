@@ -62,6 +62,12 @@ function MockWorkspace({ consultation }: { consultation: MockConsultation }) {
         playing: stream.playing,
       }}
       vitals={consultation.vitals}
+      // Demo retains the scripted clinician name for narrative consistency.
+      speakerLabels={{
+        doctor: "Dr. Patel",
+        patient: consultation.patient.name || "Patient",
+      }}
+      headerMeta="en-US · medical"
       onPlayToggle={stream.playing ? stream.pause : stream.start}
       onStop={stream.reset}
     />
@@ -128,6 +134,10 @@ function LiveWorkspace({ consultation }: { consultation: MockConsultation }) {
               activity: stream.activity,
             }}
             vitals={consultation.vitals}
+            speakerLabels={{
+              doctor: "Doctor",
+              patient: consultation.patient.name || "Patient",
+            }}
           />
         )}
 
@@ -162,6 +172,8 @@ interface WorkspaceLayoutProps {
   consultation: MockConsultation;
   stream: SharedStream;
   vitals: VitalReading[];
+  speakerLabels?: { doctor: string; patient: string };
+  headerMeta?: string;
   onPlayToggle: () => void;
   onStop: () => void;
 }
@@ -170,6 +182,8 @@ function WorkspaceLayout({
   consultation,
   stream,
   vitals,
+  speakerLabels,
+  headerMeta,
   onPlayToggle,
   onStop,
 }: WorkspaceLayoutProps) {
@@ -196,6 +210,8 @@ function WorkspaceLayout({
             activity: stream.activity,
           }}
           vitals={vitals}
+          speakerLabels={speakerLabels}
+          headerMeta={headerMeta}
         />
 
         <RecordingBar
@@ -213,9 +229,16 @@ function WorkspaceLayout({
 interface WorkspacePanesProps {
   stream: Omit<SharedStream, "playing">;
   vitals: VitalReading[];
+  speakerLabels?: { doctor: string; patient: string };
+  headerMeta?: string;
 }
 
-function WorkspacePanes({ stream, vitals }: WorkspacePanesProps) {
+function WorkspacePanes({
+  stream,
+  vitals,
+  speakerLabels,
+  headerMeta,
+}: WorkspacePanesProps) {
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-[184px_minmax(0,1.4fr)_minmax(0,1fr)]">
       <TimelineRail
@@ -226,6 +249,8 @@ function WorkspacePanes({ stream, vitals }: WorkspacePanesProps) {
       <TranscriptPane
         lines={stream.transcript}
         activity={stream.activity}
+        speakerLabels={speakerLabels}
+        headerMeta={headerMeta}
         className="h-[calc(100vh-300px)] min-h-[440px]"
       />
       <div className="flex flex-col gap-5">

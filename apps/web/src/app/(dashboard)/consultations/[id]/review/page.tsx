@@ -145,6 +145,11 @@ export default function ReviewPage({ params }: PageProps) {
         <TranscriptPane
           lines={adapted.transcript}
           activity="idle"
+          speakerLabels={{
+            doctor: "Doctor",
+            patient: data.patient.name || "Patient",
+          }}
+          headerMeta={data.language ?? undefined}
           className="h-[calc(100vh-260px)] min-h-[440px]"
         />
         <div className="flex flex-col gap-5">

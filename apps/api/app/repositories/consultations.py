@@ -84,6 +84,24 @@ class ConsultationRepository:
         existing.summary = summary
         existing.updated_at = datetime.now(UTC)
 
+    async def delete(
+        self, *, consultation_id: uuid.UUID, user_id: str
+    ) -> bool:
+        """Hard-delete a consultation and all child rows.
+
+        Returns False if the row doesn't exist or belongs to another user
+        (treated as a 404 by the caller — same response either way).
+        Children cascade via the ORM relationships + FK ondelete=CASCADE.
+        """
+        existing = await self.get_for_user(
+            consultation_id=consultation_id, user_id=user_id
+        )
+        if existing is None:
+            return False
+        await self.session.delete(existing)
+        await self.session.flush()
+        return True
+
     # ─────────────── reads ───────────────
 
     async def get_for_user(
